@@ -1,0 +1,26 @@
+import { useLiveQuery } from "dexie-react-hooks";
+import { Section } from "../../../shared/components/ui";
+import { db } from "../../../shared/libs/db/db";
+
+export function CardListSection() {
+  const books = useLiveQuery(
+    () => db.books.orderBy("createdAt").reverse().toArray(),
+    [],
+    [],
+  );
+
+  if (!books) return <div>불러오는 중...</div>;
+  if (books.length === 0) return <div>등록된 책이 없습니다.</div>;
+
+  return (
+    <Section>
+      <ul>
+        {books.map((book) => (
+          <li key={book.id}>
+            {book.title} - {book.author}
+          </li>
+        ))}
+      </ul>
+    </Section>
+  );
+}
