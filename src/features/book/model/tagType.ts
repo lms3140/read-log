@@ -128,11 +128,6 @@ export type BookTagCategory = keyof typeof BOOK_TAGS;
 
 export type BookTag = (typeof BOOK_TAGS)[keyof typeof BOOK_TAGS][number];
 
-export interface BookClassification {
-  genre: BookGenre;
-  tags: BookTag[];
-}
-
 /**
  * UI 표시용 라벨
  */
