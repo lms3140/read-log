@@ -14,3 +14,13 @@ export type Book = {
   createdAt: string;
   finishedAt?: string;
 };
+
+export type BookForm = {
+  title: string;
+  author: string;
+  genre: BookGenre;
+  tags: BookTag[];
+  status: BookStatus;
+  rating?: number;
+  memo?: string;
+};
