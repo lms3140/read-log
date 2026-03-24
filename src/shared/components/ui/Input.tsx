@@ -1,29 +1,13 @@
-import type { FieldValues, Path, UseFormRegister } from "react-hook-form";
-import { cn } from "../../libs/cn";
 import type { InputHTMLAttributes } from "react";
+import { cn } from "../../libs/cn";
 
-export interface InputProps<T extends FieldValues> extends Omit<
-  InputHTMLAttributes<HTMLInputElement>,
-  "className" | "name"
-> {
+export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   className?: string;
-  name: Path<T>;
-  type?: string;
-  register?: UseFormRegister<T>;
 }
 
-export function Input<T extends FieldValues>({
-  className,
-  name,
-  register,
-  type = "text",
-  ...props
-}: InputProps<T>) {
+export function Input({ className, type = "text", ...props }: InputProps) {
   return (
     <input
-      type={type}
-      name={name}
-      {...register}
       {...props}
       className={cn(
         "flex h-10 w-full rounded-sm border border-line bg-surface px-3 py-2 font-sans text-sm text-foreground shadow-xs transition-colors duration-200",
