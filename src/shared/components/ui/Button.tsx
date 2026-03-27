@@ -45,6 +45,7 @@ export function Button({
         "inline-flex shrink-0 items-center justify-center gap-2 rounded-sm font-sans font-medium whitespace-nowrap transition-colors duration-200",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
         "disabled:pointer-events-none disabled:border-line disabled:bg-surface-muted disabled:text-foreground-soft disabled:shadow-none",
+        "cursor-pointer",
         variantClasses[variant],
         sizeClasses[size],
         className,
