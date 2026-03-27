@@ -1,6 +1,7 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import { Section } from "../../../shared/components/ui";
 import { db } from "../../../shared/libs/db/db";
+import { BookCard } from "./BookCard";
 
 export function CardListSection() {
   const books = useLiveQuery(
@@ -14,10 +15,10 @@ export function CardListSection() {
 
   return (
     <Section>
-      <ul>
+      <ul className="flex flex-col gap-4">
         {books.map((book) => (
           <li key={book.id}>
-            {book.title} - {book.author}
+            <BookCard book={book} />
           </li>
         ))}
       </ul>

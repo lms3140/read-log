@@ -9,7 +9,7 @@ export type Book = {
   genre: BookGenre;
   tags: BookTag[];
   status: BookStatus;
-  rating?: number;
+  rating?: string;
   memo?: string;
   createdAt: string;
   finishedAt?: string;
@@ -21,6 +21,6 @@ export type BookForm = {
   genre: BookGenre;
   tags: BookTag[];
   status: BookStatus;
-  rating?: number;
+  rating?: string;
   memo?: string;
 };
