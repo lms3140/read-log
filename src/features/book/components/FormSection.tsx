@@ -1,8 +1,9 @@
-﻿import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 
+import { addBook } from "../api/bookRepo";
 import { Button, Input, Section } from "../../../shared/components/ui";
 import { Radio } from "../../../shared/components/ui/Radio";
-import type { BookForm } from "../model/book";
+import type { Book, BookForm } from "../model/book";
 import { BOOK_GENRES } from "../model/tagType";
 import { Chip } from "../../../shared/components/ui/Chip";
 
@@ -24,7 +25,7 @@ export const BOOK_RATIONG_OPTIONS = [
 ];
 
 export function FormSection() {
-  const { register, handleSubmit, control } = useForm<BookForm>({
+  const { register, handleSubmit, control, reset } = useForm<BookForm>({
     defaultValues: {
       title: "",
       author: "",
@@ -36,14 +37,28 @@ export function FormSection() {
     },
   });
 
+  const submitBook = async (data: BookForm) => {
+    if (!data) return;
+
+    const targetBook: Book = {
+      id: crypto.randomUUID(),
+      title: data.title,
+      author: data.author,
+      genre: data.genre,
+      tags: data.tags,
+      status: data.status,
+      rating: data.rating,
+      memo: data.memo?.trim() ? data.memo : undefined,
+      createdAt: new Date().toISOString(),
+    };
+
+    await addBook(targetBook);
+    reset();
+  };
+
   return (
     <Section>
-      <form
-        className="flex flex-col gap-4"
-        onSubmit={handleSubmit((data: BookForm) => {
-          console.log(data);
-        })}
-      >
+      <form className="flex flex-col gap-4" onSubmit={handleSubmit(submitBook)}>
         <Input {...register("title")} placeholder="책 제목" />
         <Input {...register("author")} placeholder="저자명" />
 
