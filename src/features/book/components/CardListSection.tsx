@@ -1,12 +1,5 @@
 import { useLiveQuery } from "dexie-react-hooks";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-  Section,
-} from "../../../shared/components/ui";
+import { Section } from "../../../shared/components/ui";
 import { db } from "../../../shared/libs/db/db";
 import { BookCard } from "./BookCard";
 

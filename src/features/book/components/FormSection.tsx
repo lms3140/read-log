@@ -1,11 +1,13 @@
 import { Controller, useForm } from "react-hook-form";
 
-import { addBook } from "../api/bookRepo";
+import { addBook, getBookById, updateBook } from "../api/bookRepo";
 import { Button, Input, Section } from "../../../shared/components/ui";
 import { Radio } from "../../../shared/components/ui/Radio";
 import type { Book, BookForm } from "../model/book";
 import { BOOK_GENRES } from "../model/tagType";
 import { Chip } from "../../../shared/components/ui/Chip";
+import { useBookEditStore } from "../api/store/bookEditStore";
+import { useEffect, useState } from "react";
 
 export const BOOK_STATUS_OPTIONS = [
   { label: "읽지 않음", value: "NOT_READ" },
@@ -25,7 +27,9 @@ export const BOOK_RATIONG_OPTIONS = [
 ];
 
 export function FormSection() {
-  const { register, handleSubmit, control, reset } = useForm<BookForm>({
+  const bookId = useBookEditStore((state) => state.bookId);
+  const clearBookId = useBookEditStore((state) => state.clearBookId);
+  const { register, handleSubmit, control, reset, watch } = useForm<BookForm>({
     defaultValues: {
       title: "",
       author: "",
@@ -36,24 +40,75 @@ export function FormSection() {
       memo: "",
     },
   });
+  const convertBooktoBookForm = (book: Book): BookForm => {
+    const targetBook: BookForm = {
+      title: book.title,
+      author: book.author,
+      genre: book.genre,
+      tags: book.tags,
+      status: book.status,
+      rating: book.rating,
+      memo: book.memo?.trim() ? book.memo : undefined,
+    };
+    return targetBook;
+  };
 
+  const loadBookForm = async (bookId: string) => {
+    const book = await getBookById(bookId);
+    if (!book) return;
+    const bookFormData = convertBooktoBookForm(book);
+    reset(bookFormData);
+  };
+
+  useEffect(() => {
+    if (!bookId) {
+      return;
+    } else {
+      loadBookForm(bookId);
+      console.log("수정??");
+    }
+  }, [bookId]);
+
+  console.log(watch());
   const submitBook = async (data: BookForm) => {
     if (!data) return;
-
-    const targetBook: Book = {
-      id: crypto.randomUUID(),
-      title: data.title,
-      author: data.author,
-      genre: data.genre,
-      tags: data.tags,
-      status: data.status,
-      rating: data.rating,
-      memo: data.memo?.trim() ? data.memo : undefined,
-      createdAt: new Date().toISOString(),
-    };
-
-    await addBook(targetBook);
-    reset();
+    if (bookId) {
+      const targetBook: Book = {
+        id: bookId,
+        title: data.title,
+        author: data.author,
+        genre: data.genre,
+        tags: data.tags,
+        status: data.status,
+        rating: data.rating,
+        memo: data.memo?.trim() ? data.memo : undefined,
+        createdAt: new Date().toISOString(),
+      };
+      await updateBook(targetBook);
+      clearBookId();
+    } else {
+      const targetBook: Book = {
+        id: crypto.randomUUID(),
+        title: data.title,
+        author: data.author,
+        genre: data.genre,
+        tags: data.tags,
+        status: data.status,
+        rating: data.rating,
+        memo: data.memo?.trim() ? data.memo : undefined,
+        createdAt: new Date().toISOString(),
+      };
+      await addBook(targetBook);
+    }
+    reset({
+      title: "",
+      author: "",
+      genre: BOOK_GENRES[0],
+      tags: [],
+      status: "TO_READ",
+      rating: undefined,
+      memo: "",
+    });
   };
 
   return (
@@ -87,7 +142,7 @@ export function FormSection() {
         />
 
         <Radio
-          {...register("rating", { required: false })}
+          {...register("rating", { required: true })}
           title="점수"
           options={BOOK_RATIONG_OPTIONS}
         />
@@ -99,7 +154,7 @@ export function FormSection() {
           className="w-full rounded-sm border border-line bg-surface px-3 py-2 font-sans text-sm text-foreground shadow-xs transition-colors duration-200 placeholder:text-foreground-soft hover:border-line-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/35 focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:border-line-strong"
         />
 
-        <Button type="submit">기록 추가</Button>
+        <Button type="submit">{bookId ? "기록 수정" : "기록 추가"}</Button>
       </form>
     </Section>
   );
