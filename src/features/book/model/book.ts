@@ -24,3 +24,15 @@ export type BookForm = {
   rating?: string;
   memo?: string;
 };
+
+export interface WishList extends WishListBookForm {
+  id: string;
+  createdAt: string;
+}
+
+export interface WishListBookForm {
+  title: string;
+  author: string;
+  genre: BookGenre;
+  memo?: string;
+}
