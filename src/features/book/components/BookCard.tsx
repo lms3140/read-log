@@ -29,8 +29,7 @@ export function BookCard({ book }: BookCardProps) {
             <Button
               variant="danger"
               onClick={async () => {
-                const a = await removeBook(book.id);
-                console.log(a);
+                await removeBook(book.id);
               }}
             >
               삭제

@@ -1,5 +1,3 @@
-import type { FieldValues, Path, UseFormRegister } from "react-hook-form";
-
 import { cn } from "../../libs/cn";
 
 type Option = { label: string; value: string | number };
